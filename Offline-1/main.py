@@ -27,6 +27,7 @@ def main():
     input_portion = []
     sum = DiscreteSignal.DiscreteSignal(np.zeros(2 * INF + 1), INF)
     unit_impulses, coefficients = lti.linear_combination_of_impulses(input_signal)
+
     for unit_impulse, coefficient in zip(unit_impulses, coefficients):
         sum = sum.add(unit_impulse.multiply_constant_factor(coefficient))
         input_portion.append(unit_impulse.multiply_constant_factor(coefficient))
@@ -43,6 +44,7 @@ def main():
     # --Output Portion--
     output_portion = []
     output_signal, constituent_impulses, coefficients = lti.output(input_signal)
+
     for constituent_impulse, coefficient in zip(constituent_impulses, coefficients):
         output_portion.append(constituent_impulse.multiply_constant_factor(coefficient))
 
@@ -75,6 +77,7 @@ def main():
     input_portion = []
     reconstructed_signal = ContinuousSignal.ContinuousSignal(lambda t: 0, INF)
     impulses, coefficients = lti.linear_combination_of_impulses(input_signal, delta)
+
     for impulse, coefficient in zip(impulses, coefficients):
         reconstructed_signal = reconstructed_signal.add(
             impulse.multiply_constant_factor(coefficient)
@@ -82,7 +85,7 @@ def main():
         input_portion.append(impulse.multiply_constant_factor(coefficient))
 
     subplotTitles = []
-    for k in range (-2 * INF, 2 * INF + 1):
+    for k in range(-2 * INF, 2 * INF + 1):
         subplotTitles.append(f"δ(t - ({k}∇))x({k}∇)∇")
 
     subplotTitles.append("Reconstructed Signal")
@@ -101,11 +104,11 @@ def main():
     )
 
     # --Reconstructed Signal with varying Delta--
-    deltas = [0.5, 0.1, 0.05, 0.01]
+    Deltas = [0.5, 0.1, 0.05, 0.01]
     reconstructed_signals = []
-    for delta in deltas:
+    for Delta in Deltas:
         reconstructed_signal = ContinuousSignal.ContinuousSignal(lambda t: 0, INF)
-        impulses, coefficients = lti.linear_combination_of_impulses(input_signal, delta)
+        impulses, coefficients = lti.linear_combination_of_impulses(input_signal, Delta)
         for impulse, coefficient in zip(impulses, coefficients):
             reconstructed_signal = reconstructed_signal.add(
                 impulse.multiply_constant_factor(coefficient)
@@ -113,8 +116,8 @@ def main():
         reconstructed_signals.append(reconstructed_signal)
 
     subplotTitles = []
-    for delta in deltas:
-        subplotTitles.append(f"∇ = {delta}")
+    for Delta in Deltas:
+        subplotTitles.append(f"∇ = {Delta}")
 
     input_signal.plot_multiple_signal(
         reconstructed_signals,
@@ -137,11 +140,12 @@ def main():
     output_signal, constituent_impulses, coefficients = lti.output_approx(
         input_signal, delta
     )
+
     for constituent_impulse, coefficient in zip(constituent_impulses, coefficients):
         output_portion.append(constituent_impulse.multiply_constant_factor(coefficient))
 
     subplotTitles = []
-    for k in range (-2 * INF, 2 * INF + 1):
+    for k in range(-2 * INF, 2 * INF + 1):
         subplotTitles.append(f"h(t - ({k}∇))x({k}∇)∇")
 
     subplotTitles.append("Output = Sum")
@@ -160,15 +164,15 @@ def main():
     )
 
     # --Output Signal with varying Delta--
-    deltas = [0.5, 0.1, 0.05, 0.01]
+    Deltas = [0.5, 0.1, 0.05, 0.01]
     reconstructed_signals = []
-    for delta in deltas:
-        output_signal, impulses, coefficients = lti.output_approx(input_signal, delta)
+    for Delta in Deltas:
+        output_signal, impulses, coefficients = lti.output_approx(input_signal, Delta)
         reconstructed_signals.append(output_signal)
 
     subplotTitles = []
-    for delta in deltas:
-        subplotTitles.append(f"∇ = {delta}")
+    for Delta in Deltas:
+        subplotTitles.append(f"∇ = {Delta}")
 
     output_signal_varying_delta = ContinuousSignal.ContinuousSignal(
         lambda t: np.piecewise(t, [t < 0, t >= 0], [0, lambda t: 1 - np.exp(-t)]), INF

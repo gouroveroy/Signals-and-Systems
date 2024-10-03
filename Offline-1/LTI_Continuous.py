@@ -58,7 +58,7 @@ class LTI_Continuous:
 
 if __name__ == "__main__":
     INF = 3
-    delta = 0.05
+    delta = 0.5
     impulse_response = ContinuousSignal.ContinuousSignal(
         lambda t: np.piecewise(t, [t < 0, t >= 0], [0, 1]), INF
     )
@@ -73,20 +73,20 @@ if __name__ == "__main__":
         lambda t: 0, input_signal.INF
     )
 
-    impulses, coefficients = lti.linear_combination_of_impulses(input_signal, delta)
-    for impulse, coefficient in zip(impulses, coefficients):
-        reconstructed_signal = reconstructed_signal.add(
-            impulse.multiply_constant_factor(coefficient)
-        )
+    # impulses, coefficients = lti.linear_combination_of_impulses(input_signal, delta)
+    # for impulse, coefficient in zip(impulses, coefficients):
+    #     reconstructed_signal = reconstructed_signal.add(
+    #         impulse.multiply_constant_factor(coefficient)
+    #     )
         # impulse.multiply_constant_factor(coefficient).plot(0, 1)
 
-    reconstructed_signal.plot(0, 1, 0.5)
+    # reconstructed_signal.plot(0, 1, 0.5)
 
-    # output_signal, constituent_impulses, coefficients = lti.output_approx(
-    #     input_signal, delta
-    # )
+    output_signal, constituent_impulses, coefficients = lti.output_approx(
+        input_signal, delta
+    )
 
-    # for constituent_impulse, coefficient in zip(constituent_impulses, coefficients):
-    #     constituent_impulse.multiply_constant_factor(coefficient).plot()
+    for constituent_impulse, coefficient in zip(constituent_impulses, coefficients):
+        constituent_impulse.multiply_constant_factor(coefficient).plot()
 
-    # output_signal.plot()
+    output_signal.plot()
