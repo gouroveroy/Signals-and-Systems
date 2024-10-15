@@ -32,12 +32,20 @@ def main():
         sum = sum.add(unit_impulse.multiply_constant_factor(coefficient))
         input_portion.append(unit_impulse.multiply_constant_factor(coefficient))
 
+    subplotTitles = []
+    for k in range(-INF, INF + 1):
+        subplotTitles.append(f"δ[n - ({k})]x[{k}]")
+
+    subplotTitles.append("Sum")
+
     input_portion.append(sum)
     input_signal.plot_multiple_signal(
         input_portion,
         "Figure: Returned impulses multiplied by respective coefficients",
         "Impulses multiplied by coefficients",
-        "δ",
+        subplotTitles,
+        4,
+        3,
         "Discrete/input.png",
     )
 
@@ -48,12 +56,20 @@ def main():
     for constituent_impulse, coefficient in zip(constituent_impulses, coefficients):
         output_portion.append(constituent_impulse.multiply_constant_factor(coefficient))
 
+    subplotTitles = []
+    for k in range(-INF, INF + 1):
+        subplotTitles.append(f"h[n - ({k})]x[{k}]")
+
+    subplotTitles.append("Output = Sum")
+
     output_portion.append(output_signal)
     output_signal.plot_multiple_signal(
         output_portion,
         "Figure: Output",
         "Response of Input Signal",
-        "h",
+        subplotTitles,
+        4,
+        3,
         "Discrete/output.png",
     )
 

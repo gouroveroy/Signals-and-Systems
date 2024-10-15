@@ -45,21 +45,29 @@ class DiscreteSignal:
         plt.grid(True)
         plt.show()
 
-    def plot_multiple_signal(self, DiscreteSignals: list["DiscreteSignal"], title, supTitle, subplotTitle, saveTo):
+    def plot_multiple_signal(
+        self,
+        DiscreteSignals: list["DiscreteSignal"],
+        title,
+        supTitle,
+        subplotTitles,
+        rows,
+        columns,
+        saveTo,
+    ):
         summed_signal = DiscreteSignals[len(DiscreteSignals) - 1]
         DiscreteSignals = DiscreteSignals[: len(DiscreteSignals) - 1]
 
         # Create a figure with multiple subplots (4 rows, 3 columns)
-        fig, axs = plt.subplots(4, 3, figsize=(10, 10))
+        fig, axs = plt.subplots(rows, columns, figsize=(10, 10))
         y_range = (-1, max(np.max(self.values), 3) + 1)
 
         # Title for the entire figure
         fig.suptitle(supTitle, fontsize=16)
 
         # Plot the individual impulses δ[n-k] * x[k]
-        k = -self.INF
         row, col = 0, 0
-        for DiscreteSignal in DiscreteSignals:
+        for DiscreteSignal, subplotTitle in zip(DiscreteSignals, subplotTitles):
             axs[row, col].stem(
                 np.arange(-self.INF, self.INF + 1, 1),
                 DiscreteSignal.values,
@@ -67,13 +75,12 @@ class DiscreteSignal:
             )
             axs[row, col].set_xticks(np.arange(-self.INF, self.INF + 1, 1))
             axs[row, col].set_ylim(*y_range)
-            axs[row, col].set_title(subplotTitle+f"[n - ({k})]x[{k}]")
+            axs[row, col].set_title(subplotTitle)
             axs[row, col].set_xlabel("n (Time Index)")
             axs[row, col].set_ylabel("x[n]")
             axs[row, col].grid(True)
-            k += 1
             col += 1
-            if col == 3:
+            if col == columns:
                 col = 0
                 row += 1
 
@@ -83,7 +90,7 @@ class DiscreteSignal:
         )
         axs[row, col].set_xticks(np.arange(-self.INF, self.INF + 1, 1))
         axs[row, col].set_ylim(*y_range)
-        axs[row, col].set_title("Sum")
+        axs[row, col].set_title(subplotTitles[len(subplotTitles) - 1])
         axs[row, col].set_xlabel("n(Time Index)")
         axs[row, col].set_ylabel("x[n]")
         axs[row, col].grid(True)

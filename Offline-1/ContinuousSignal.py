@@ -19,40 +19,13 @@ class ContinuousSignal:
     def multiply_constant_factor(self, scaler):
         return ContinuousSignal(lambda t: self.func(t) * scaler, self.INF)
 
-    def plot(
-        self, minheight=0, maxheight=1, y_tick_spacing=0.5, color="blue"
-    ):
+    def plot(self, minheight=0, maxheight=1, y_tick_spacing=0.5, color="blue"):
         t = np.linspace(-self.INF, self.INF + 0.01, 1000)
         plt.figure(figsize=(8, 3))
         plt.xticks(np.arange(-self.INF, self.INF + 1, 1))
         plt.plot(t, self.func(t), color=color)
-
-        # Find min and max of the function
-        # y_min, y_max = min(self.func(t)), max(self.func(t))
-
-        # If minheight and maxheight are specified, use them; otherwise, use function's min and max
-        # if minheight is not None and maxheight is not None:
         plt.ylim([minheight - 0.1, maxheight + 0.3])
-        # else:
-        #     # Add a small margin if min and max are too close or identical
-        #     if y_min == y_max:
-        #         y_min -= 0.1  # Set a small margin below
-        #         y_max += 0.1  # Set a small margin above
-        #     else:
-        #         # Add 10% margin for visual clarity
-        #         y_min -= 0.1 * abs(y_min)
-        #         y_max += 0.1 * abs(y_max)
-        #     plt.ylim([y_min, y_max])
-
         plt.yticks(np.arange(0, maxheight + y_tick_spacing, y_tick_spacing))
-
-        # plt.ylim(
-        #     [
-        #         min(self.func(t)) - 0.1 * abs(min(self.func(t))),
-        #         max(self.func(t)) + 0.1 * abs(max(self.func(t))),
-        #     ]
-        # )
-
         plt.title("Continuous Signal")
         plt.xlabel("t(Time)")
         plt.ylabel("x(t)")
@@ -86,7 +59,6 @@ class ContinuousSignal:
         fig.suptitle(supTitle, fontsize=16)
 
         # Plot the individual impulses δ/h[t-k▽] * x[t] * ▽
-        k = -self.INF * 2
         row, col = 0, 0
         for continuousSignal, subplotTitle in zip(continuousSignals, subplotTitles):
             axs[row, col].set_xticks(np.arange(-self.INF, self.INF + 1, 1))
@@ -105,7 +77,6 @@ class ContinuousSignal:
             if samePlot:
                 axs[row, col].legend()
             axs[row, col].grid(True)
-            k += 1
             col += 1
             if col == columns:
                 col = 0

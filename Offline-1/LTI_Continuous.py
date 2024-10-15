@@ -78,7 +78,7 @@ if __name__ == "__main__":
     #     reconstructed_signal = reconstructed_signal.add(
     #         impulse.multiply_constant_factor(coefficient)
     #     )
-        # impulse.multiply_constant_factor(coefficient).plot(0, 1)
+    # impulse.multiply_constant_factor(coefficient).plot(0, 1)
 
     # reconstructed_signal.plot(0, 1, 0.5)
 
