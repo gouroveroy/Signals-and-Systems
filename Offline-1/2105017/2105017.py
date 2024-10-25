@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 
 class DiscreteSignal:
@@ -8,7 +9,8 @@ class DiscreteSignal:
         self.INF = INF
 
     def set_value_at_time(self, time: int, value):
-        self.values[time] = value
+        if time >= 0 and time <= 2 * self.INF:
+            self.values[time] = value
 
     def shift_signal(self, shift: int):
         new_values = self.values
@@ -33,7 +35,7 @@ class DiscreteSignal:
         new_values = self.values * scaler
         return DiscreteSignal(new_values, self.INF)
 
-    def plot(self):
+    def plot_signal(self):
         plt.figure(figsize=(8, 3))
         plt.xticks(np.arange(-self.INF, self.INF + 1, 1))
         y_range = (-1, max(np.max(self.values), 3) + 1)
@@ -45,7 +47,7 @@ class DiscreteSignal:
         plt.grid(True)
         plt.show()
 
-    def plot_multiple_signal(
+    def plot(
         self,
         DiscreteSignals: list["DiscreteSignal"],
         title,
@@ -132,7 +134,7 @@ class ContinuousSignal:
     def multiply_constant_factor(self, scaler):
         return ContinuousSignal(lambda t: self.func(t) * scaler, self.INF)
 
-    def plot(self, minheight=0, maxheight=1, y_tick_spacing=0.5, color="blue"):
+    def plot_signal(self, minheight=0, maxheight=1, y_tick_spacing=0.5, color="blue"):
         t = np.linspace(-self.INF, self.INF + 0.01, 1000)
         plt.figure(figsize=(8, 3))
         plt.xticks(np.arange(-self.INF, self.INF + 1, 1))
@@ -145,7 +147,7 @@ class ContinuousSignal:
         plt.grid(True)
         plt.show()
 
-    def plot_multiple_signal(
+    def plot(
         self,
         continuousSignals: list["ContinuousSignal"],
         title,
@@ -235,29 +237,27 @@ class ContinuousSignal:
 
 class LTI_Discrete:
 
-    def __init__(self, impulse_response: "DiscreteSignal.DiscreteSignal"):
+    def __init__(self, impulse_response: "DiscreteSignal"):
         self.impulse_response = impulse_response
 
-    def linear_combination_of_impulses(
-        self, input_signal: "DiscreteSignal.DiscreteSignal"
-    ):
+    def linear_combination_of_impulses(self, input_signal: "DiscreteSignal"):
         INF = input_signal.INF
         unit_impulses = []
         coefficients = []
         for i in range(-INF, INF + 1):
             coefficient = input_signal.values[INF + i]
-            unit_impulse = DiscreteSignal.DiscreteSignal(np.zeros(2 * INF + 1), INF)
+            unit_impulse = DiscreteSignal(np.zeros(2 * INF + 1), INF)
             unit_impulse.set_value_at_time(INF, 1)
             unit_impulses.append(unit_impulse.shift_signal(i))
             coefficients.append(coefficient)
 
         return unit_impulses, coefficients
 
-    def output(self, input_signal: "DiscreteSignal.DiscreteSignal"):
+    def output(self, input_signal: "DiscreteSignal"):
         INF = input_signal.INF
         constituent_impulses = []
         coefficients = []
-        output_signal = DiscreteSignal.DiscreteSignal(np.zeros(2 * INF + 1), INF)
+        output_signal = DiscreteSignal(np.zeros(2 * INF + 1), INF)
         for i in range(-INF, INF + 1):
             coefficients.append(input_signal.values[INF + i])
             response = self.impulse_response.shift_signal(i)
@@ -269,14 +269,13 @@ class LTI_Discrete:
 
 
 class LTI_Continuous:
-    def __init__(self, impulse_response: "ContinuousSignal.ContinuousSignal"):
+    def __init__(self, impulse_response: "ContinuousSignal"):
         self.impulse_response = impulse_response
 
     def linear_combination_of_impulses(
-        self, input_signal: "ContinuousSignal.ContinuousSignal", delta: float
+        self, input_signal: "ContinuousSignal", delta: float
     ):
         # t_values = np.arange(-input_signal.INF, input_signal.INF, delta)
-        # t_values = np.arange(0, input_signal.INF + delta, delta)
         t_values = np.array(
             [
                 -input_signal.INF + i * delta
@@ -289,7 +288,7 @@ class LTI_Continuous:
 
         for t in t_values:
             coefficient = input_signal.func(t) * delta
-            impulse = ContinuousSignal.ContinuousSignal(
+            impulse = ContinuousSignal(
                 lambda tau, t=t: (1 / delta) * ((t <= tau) & (tau <= t + delta)),
                 input_signal.INF,
             )  # Impulse of width delta and height 1/delta
@@ -298,9 +297,7 @@ class LTI_Continuous:
 
         return impulses, coefficients
 
-    def output_approx(
-        self, input_signal: "ContinuousSignal.ContinuousSignal", delta: float
-    ):
+    def output_approx(self, input_signal: "ContinuousSignal", delta: float):
         # t_values = np.arange(-input_signal.INF, input_signal.INF, delta)
         t_values = np.array(
             [
@@ -311,7 +308,7 @@ class LTI_Continuous:
         constituent_impulses = []
         coefficients = []
 
-        output_signal = ContinuousSignal.ContinuousSignal(lambda t: 0, input_signal.INF)
+        output_signal = ContinuousSignal(lambda t: 0, input_signal.INF)
         for t in t_values:
             coefficients.append(input_signal.func(t) * delta)
             response = self.impulse_response.shift(t)
@@ -325,23 +322,30 @@ class LTI_Continuous:
 def main():
     # --Discrete Portion--
 
+    # Define the path where the image will be saved
+    folder_path = "Discrete"
+
+    # Check if the folder exists, if not create it
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
     INF = 5
     # --Impulse Response--
-    impulse_response = DiscreteSignal.DiscreteSignal(np.zeros(2 * INF + 1), INF)
+    impulse_response = DiscreteSignal(np.zeros(2 * INF + 1), INF)
     impulse_response.set_value_at_time(INF + 0, 1)
     impulse_response.set_value_at_time(INF + 1, 1)
     impulse_response.set_value_at_time(INF + 2, 1)
 
     # --Discrete Signal--
-    input_signal = DiscreteSignal.DiscreteSignal(np.zeros(2 * INF + 1), INF)
+    input_signal = DiscreteSignal(np.zeros(2 * INF + 1), INF)
     input_signal.set_value_at_time(INF + 0, 0.5)
     input_signal.set_value_at_time(INF + 1, 2)
 
-    lti = LTI_Discrete.LTI_Discrete(impulse_response)
+    lti = LTI_Discrete(impulse_response)
 
     # --Input Portion--
     input_portion = []
-    sum = DiscreteSignal.DiscreteSignal(np.zeros(2 * INF + 1), INF)
+    sum = DiscreteSignal(np.zeros(2 * INF + 1), INF)
     unit_impulses, coefficients = lti.linear_combination_of_impulses(input_signal)
 
     for unit_impulse, coefficient in zip(unit_impulses, coefficients):
@@ -355,14 +359,14 @@ def main():
     subplotTitles.append("Sum")
 
     input_portion.append(sum)
-    input_signal.plot_multiple_signal(
+    input_signal.plot(
         input_portion,
         "Figure: Returned impulses multiplied by respective coefficients",
         "Impulses multiplied by coefficients",
         subplotTitles,
         4,
         3,
-        "Discrete/input.png",
+        f"{folder_path}/input.png",
     )
 
     # --Output Portion--
@@ -379,35 +383,42 @@ def main():
     subplotTitles.append("Output = Sum")
 
     output_portion.append(output_signal)
-    output_signal.plot_multiple_signal(
+    output_signal.plot(
         output_portion,
         "Figure: Output",
         "Response of Input Signal",
         subplotTitles,
         4,
         3,
-        "Discrete/output.png",
+        f"{folder_path}/output.png",
     )
 
     # --Continuous Portion--
 
+    # Define the path where the image will be saved
+    folder_path = "Continuous"
+
+    # Check if the folder exists, if not create it
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
     INF = 3
     delta = 0.5
     # --Impulse Response--
-    impulse_response = ContinuousSignal.ContinuousSignal(
+    impulse_response = ContinuousSignal(
         lambda t: np.piecewise(t, [t < 0, t >= 0], [0, 1]), INF
     )
 
     # --Continuous Signal--
-    input_signal = ContinuousSignal.ContinuousSignal(
+    input_signal = ContinuousSignal(
         lambda t: np.piecewise(t, [t < 0, t >= 0], [0, lambda t: np.exp(-t)]), INF
     )
 
-    lti = LTI_Continuous.LTI_Continuous(impulse_response)
+    lti = LTI_Continuous(impulse_response)
 
     # --Input Portion--
     input_portion = []
-    reconstructed_signal = ContinuousSignal.ContinuousSignal(lambda t: 0, INF)
+    reconstructed_signal = ContinuousSignal(lambda t: 0, INF)
     impulses, coefficients = lti.linear_combination_of_impulses(input_signal, delta)
 
     for impulse, coefficient in zip(impulses, coefficients):
@@ -423,14 +434,14 @@ def main():
     subplotTitles.append("Reconstructed Signal")
 
     input_portion.append(reconstructed_signal)
-    input_signal.plot_multiple_signal(
+    input_signal.plot(
         input_portion,
         "Figure: Returned impulses multiplied by their coefficients",
         "Impulses multiplied by coefficients",
         subplotTitles,
         5,
         3,
-        "Continuous/input.png",
+        f"{folder_path}/input.png",
         -0.1,
         1.1,
     )
@@ -439,7 +450,7 @@ def main():
     Deltas = [0.5, 0.1, 0.05, 0.01]
     reconstructed_signals = []
     for Delta in Deltas:
-        reconstructed_signal = ContinuousSignal.ContinuousSignal(lambda t: 0, INF)
+        reconstructed_signal = ContinuousSignal(lambda t: 0, INF)
         impulses, coefficients = lti.linear_combination_of_impulses(input_signal, Delta)
         for impulse, coefficient in zip(impulses, coefficients):
             reconstructed_signal = reconstructed_signal.add(
@@ -451,14 +462,14 @@ def main():
     for Delta in Deltas:
         subplotTitles.append(f"∇ = {Delta}")
 
-    input_signal.plot_multiple_signal(
+    input_signal.plot(
         reconstructed_signals,
         "Figure: Reconstruction of input signal with varying delta",
         "",
         subplotTitles,
         2,
         2,
-        "Continuous/input_varying_delta.png",
+        f"{folder_path}/input_varying_delta.png",
         -0.1,
         1.1,
         0.2,
@@ -483,14 +494,14 @@ def main():
     subplotTitles.append("Output = Sum")
 
     output_portion.append(output_signal)
-    output_signal.plot_multiple_signal(
+    output_signal.plot(
         output_portion,
         "Figure: Returned impulses multiplied by their coefficients",
         "Response of Impulse Signal",
         subplotTitles,
         5,
         3,
-        "Continuous/output.png",
+        f"{folder_path}/output.png",
         -0.1,
         1.3,
     )
@@ -506,18 +517,18 @@ def main():
     for Delta in Deltas:
         subplotTitles.append(f"∇ = {Delta}")
 
-    output_signal_varying_delta = ContinuousSignal.ContinuousSignal(
+    output_signal_varying_delta = ContinuousSignal(
         lambda t: np.piecewise(t, [t < 0, t >= 0], [0, lambda t: 1 - np.exp(-t)]), INF
     )
 
-    output_signal_varying_delta.plot_multiple_signal(
+    output_signal_varying_delta.plot(
         reconstructed_signals,
         "Figure: Approximate output signal with varying delta",
         "Approximate output as ∇ tends to 0",
         subplotTitles,
         2,
         2,
-        "Continuous/output_varying_delta.png",
+        f"{folder_path}/output_varying_delta.png",
         -0.1,
         1.3,
         0.2,

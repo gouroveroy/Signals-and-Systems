@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 import DiscreteSignal
 import ContinuousSignal
@@ -8,6 +9,13 @@ import LTI_Continuous
 
 def main():
     # --Discrete Portion--
+
+    # Define the path where the image will be saved
+    folder_path = "Discrete"
+
+    # Check if the folder exists, if not create it
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
     INF = 5
     # --Impulse Response--
@@ -46,7 +54,7 @@ def main():
         subplotTitles,
         4,
         3,
-        "Discrete/input.png",
+        f"{folder_path}/input.png",
     )
 
     # --Output Portion--
@@ -70,10 +78,17 @@ def main():
         subplotTitles,
         4,
         3,
-        "Discrete/output.png",
+        f"{folder_path}/output.png",
     )
 
     # --Continuous Portion--
+
+    # Define the path where the image will be saved
+    folder_path = "Continuous"
+
+    # Check if the folder exists, if not create it
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
     INF = 3
     delta = 0.5
@@ -114,7 +129,7 @@ def main():
         subplotTitles,
         5,
         3,
-        "Continuous/input.png",
+        f"{folder_path}/input.png",
         -0.1,
         1.1,
     )
@@ -142,7 +157,7 @@ def main():
         subplotTitles,
         2,
         2,
-        "Continuous/input_varying_delta.png",
+        f"{folder_path}/input_varying_delta.png",
         -0.1,
         1.1,
         0.2,
@@ -174,7 +189,7 @@ def main():
         subplotTitles,
         5,
         3,
-        "Continuous/output.png",
+        f"{folder_path}/output.png",
         -0.1,
         1.3,
     )
@@ -201,7 +216,7 @@ def main():
         subplotTitles,
         2,
         2,
-        "Continuous/output_varying_delta.png",
+        f"{folder_path}/output_varying_delta.png",
         -0.1,
         1.3,
         0.2,

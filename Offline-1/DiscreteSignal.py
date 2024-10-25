@@ -8,7 +8,7 @@ class DiscreteSignal:
         self.INF = INF
 
     def set_value_at_time(self, time: int, value):
-        if time >= -self.INF and time <= self.INF:
+        if time >= 0 and time <= 2 * self.INF:
             self.values[time] = value
 
     def shift_signal(self, shift: int):
