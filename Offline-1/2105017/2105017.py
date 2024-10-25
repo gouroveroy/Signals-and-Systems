@@ -60,7 +60,7 @@ class DiscreteSignal:
         summed_signal = DiscreteSignals[len(DiscreteSignals) - 1]
         DiscreteSignals = DiscreteSignals[: len(DiscreteSignals) - 1]
 
-        # Create a figure with multiple subplots (4 rows, 3 columns)
+        # Create a figure with multiple subplots (rows, columns)
         fig, axs = plt.subplots(rows, columns, figsize=(10, 10))
         y_range = (-1, max(np.max(self.values), 3) + 1)
 
@@ -167,7 +167,7 @@ class ContinuousSignal:
         reconstructed_signal = continuousSignals[len(continuousSignals) - 1]
         continuousSignals = continuousSignals[: len(continuousSignals) - 1]
 
-        # Create a figure with multiple subplots (4 rows, 3 columns)
+        # Create a figure with multiple subplots (rows, columns)
         fig, axs = plt.subplots(rows, columns, figsize=(10, 10))
 
         # Title for the entire figure
