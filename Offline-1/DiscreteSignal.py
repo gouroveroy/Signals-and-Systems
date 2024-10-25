@@ -8,7 +8,8 @@ class DiscreteSignal:
         self.INF = INF
 
     def set_value_at_time(self, time: int, value):
-        self.values[time] = value
+        if time >= -self.INF and time <= self.INF:
+            self.values[time] = value
 
     def shift_signal(self, shift: int):
         new_values = self.values
@@ -33,7 +34,7 @@ class DiscreteSignal:
         new_values = self.values * scaler
         return DiscreteSignal(new_values, self.INF)
 
-    def plot(self):
+    def plot_signal(self):
         plt.figure(figsize=(8, 3))
         plt.xticks(np.arange(-self.INF, self.INF + 1, 1))
         y_range = (-1, max(np.max(self.values), 3) + 1)
@@ -45,7 +46,7 @@ class DiscreteSignal:
         plt.grid(True)
         plt.show()
 
-    def plot_multiple_signal(
+    def plot(
         self,
         DiscreteSignals: list["DiscreteSignal"],
         title,
@@ -120,8 +121,8 @@ if __name__ == "__main__":
     x = DiscreteSignal(np.zeros(2 * INF + 1), INF)
     x.set_value_at_time(INF + 0, 0.5)
     x.set_value_at_time(INF + 1, 2)
-    x.plot()
-    # x.shift_signal(2).plot()
-    # x.add(DiscreteSignal(np.ones(2 * INF + 1), INF)).plot()
-    # x.multiply(DiscreteSignal(np.zeros(2 * INF + 1), INF)).plot()
-    # x.multiply_constant_factor(2).plot()
+    x.plot_signal()
+    # x.shift_signal(2).plot_signal()
+    # x.add(DiscreteSignal(np.ones(2 * INF + 1), INF)).plot_signal()
+    # x.multiply(DiscreteSignal(np.zeros(2 * INF + 1), INF)).plot_signal()
+    # x.multiply_constant_factor(2).plot_signal()

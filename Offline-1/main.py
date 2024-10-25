@@ -39,7 +39,7 @@ def main():
     subplotTitles.append("Sum")
 
     input_portion.append(sum)
-    input_signal.plot_multiple_signal(
+    input_signal.plot(
         input_portion,
         "Figure: Returned impulses multiplied by respective coefficients",
         "Impulses multiplied by coefficients",
@@ -63,7 +63,7 @@ def main():
     subplotTitles.append("Output = Sum")
 
     output_portion.append(output_signal)
-    output_signal.plot_multiple_signal(
+    output_signal.plot(
         output_portion,
         "Figure: Output",
         "Response of Input Signal",
@@ -107,7 +107,7 @@ def main():
     subplotTitles.append("Reconstructed Signal")
 
     input_portion.append(reconstructed_signal)
-    input_signal.plot_multiple_signal(
+    input_signal.plot(
         input_portion,
         "Figure: Returned impulses multiplied by their coefficients",
         "Impulses multiplied by coefficients",
@@ -135,7 +135,7 @@ def main():
     for Delta in Deltas:
         subplotTitles.append(f"∇ = {Delta}")
 
-    input_signal.plot_multiple_signal(
+    input_signal.plot(
         reconstructed_signals,
         "Figure: Reconstruction of input signal with varying delta",
         "",
@@ -167,7 +167,7 @@ def main():
     subplotTitles.append("Output = Sum")
 
     output_portion.append(output_signal)
-    output_signal.plot_multiple_signal(
+    output_signal.plot(
         output_portion,
         "Figure: Returned impulses multiplied by their coefficients",
         "Response of Impulse Signal",
@@ -194,7 +194,7 @@ def main():
         lambda t: np.piecewise(t, [t < 0, t >= 0], [0, lambda t: 1 - np.exp(-t)]), INF
     )
 
-    output_signal_varying_delta.plot_multiple_signal(
+    output_signal_varying_delta.plot(
         reconstructed_signals,
         "Figure: Approximate output signal with varying delta",
         "Approximate output as ∇ tends to 0",

@@ -19,7 +19,7 @@ class ContinuousSignal:
     def multiply_constant_factor(self, scaler):
         return ContinuousSignal(lambda t: self.func(t) * scaler, self.INF)
 
-    def plot(self, minheight=0, maxheight=1, y_tick_spacing=0.5, color="blue"):
+    def plot_signal(self, minheight=0, maxheight=1, y_tick_spacing=0.5, color="blue"):
         t = np.linspace(-self.INF, self.INF + 0.01, 1000)
         plt.figure(figsize=(8, 3))
         plt.xticks(np.arange(-self.INF, self.INF + 1, 1))
@@ -32,7 +32,7 @@ class ContinuousSignal:
         plt.grid(True)
         plt.show()
 
-    def plot_multiple_signal(
+    def plot(
         self,
         continuousSignals: list["ContinuousSignal"],
         title,
@@ -124,15 +124,15 @@ if __name__ == "__main__":
     signal1 = ContinuousSignal(lambda t: np.sin(t), 5)
     signal2 = ContinuousSignal(lambda t: np.cos(t), 5)
 
-    signal1.plot()
-    signal2.plot()
+    signal1.plot_signal()
+    signal2.plot_signal()
 
-    # signal1.shift(2).plot()
-    # signal1.add(signal2).plot()
-    # signal1.multiply(signal2).plot()
-    # signal1.multiply_constant_factor(2).plot()
+    # signal1.shift(2).plot_signal()
+    # signal1.add(signal2).plot_signal()
+    # signal1.multiply(signal2).plot_signal()
+    # signal1.multiply_constant_factor(2).plot_signal()
 
-    # signal1.shift(2).plot()
-    # signal1.add(signal2).plot()
-    # signal1.multiply(signal2).plot()
-    # signal1.multiply_constant_factor(2).plot()
+    # signal1.shift(2).plot_signal()
+    # signal1.add(signal2).plot_signal()
+    # signal1.multiply(signal2).plot_signal()
+    # signal1.multiply_constant_factor(2).plot_signal()

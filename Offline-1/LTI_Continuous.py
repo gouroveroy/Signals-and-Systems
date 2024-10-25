@@ -10,7 +10,6 @@ class LTI_Continuous:
         self, input_signal: "ContinuousSignal.ContinuousSignal", delta: float
     ):
         # t_values = np.arange(-input_signal.INF, input_signal.INF, delta)
-        # t_values = np.arange(0, input_signal.INF + delta, delta)
         t_values = np.array(
             [
                 -input_signal.INF + i * delta
