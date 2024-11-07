@@ -158,11 +158,33 @@ def target_function(x, function_type="square"):
         # Sawtooth wave: linearly increasing from -1 to 1 over the period
         # https://en.wikipedia.org/wiki/Sawtooth_wave
 
+        # Sawtooth wave Produces a linearly increasing wave that ramps from -1 to 1 over the period.
+        # The formula calculates a repeating ramp from -1 to +1 based on `x` within the period.
+        # This is achieved through the following steps:
+
+        # 1. **Normalization**: x is scaled by the period to fit within [0, 1].
+        #    This allows the wave to reset every period.
+        # 2. **Floor Function**: np.floor(0.5 + x / period) rounds the normalized x to the nearest integer,
+        #    effectively wrapping x back to the primary interval [0, 1).
+        # 3. **Range Adjustment**: The expression inside the parentheses creates a ramp from -1 to +1.
+        #    Multiplying by 2 scales the range appropriately.
+
         return 2 * (x / period - np.floor(0.5 + x / period))
 
     elif function_type == "triangle":
         # Triangle wave: periodic line with slope +1 and -1 alternately
         # https://en.wikipedia.org/wiki/Triangle_wave
+
+        # Triangle wave Produces a periodic waveform that alternates linearly between -1 and +1,
+        # creating a symmetrical "V" shape. The formula works as follows:
+
+        # 1. **Normalization**: Similar to the sawtooth wave, x is scaled by the period to fit within [0, 1].
+        #    This ensures the wave resets every period.
+        # 2. **Floor Function**: np.floor(0.5 + x / period) wraps x back to the primary interval [0, 1).
+        # 3. **Absolute Value for Symmetry**: Taking the absolute value of the inner term creates a "V" shape,
+        #    making the wave symmetrical with respect to the x-axis.
+        # 4. **Scaling and Shifting**: Multiplying by 2 scales the waveform to extend between -1 and +1,
+        #    and subtracting 1 adjusts the range to the desired amplitude.
 
         return 2 * np.abs(2 * (x / period - np.floor(0.5 + x / period))) - 1
 
