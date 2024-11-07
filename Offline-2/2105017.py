@@ -148,7 +148,7 @@ def target_function(x, function_type="square"):
     Returns:
     - The values of the specified target function at each point in x.
     """
-    period = np.pi
+    period = 2 * np.pi
     if function_type == "square":
         # Square wave: +1 when sin(x) >= 0, -1 otherwise
 
