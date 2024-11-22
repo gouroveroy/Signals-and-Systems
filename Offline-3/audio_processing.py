@@ -73,10 +73,11 @@ filtered_ft_data[1] = ft_data[1].copy()
 # Experiment with different ideas like make the values for low frequencies zero, or make high frequencies zero, or make a range of frequencies zero.
 
 # Set the cutoff frequency for the high-pass filter
-threshold_frequency = 1000
-high_pass_filter = np.abs(frequencies) >= threshold_frequency
-filtered_ft_data[0] *= high_pass_filter
-filtered_ft_data[1] *= high_pass_filter
+cutoff_frequency = 1000  # in Hz
+
+# Apply high-pass filter by zeroing out frequencies below the cutoff
+filtered_ft_data[0][frequencies < cutoff_frequency] = 0
+filtered_ft_data[1][frequencies < cutoff_frequency] = 0
 
 # Print frequencies and their corresponding magnitudes
 # threshold = 0.02
