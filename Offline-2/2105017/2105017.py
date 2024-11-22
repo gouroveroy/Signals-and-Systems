@@ -207,7 +207,7 @@ def target_function(x, function_type="square"):
 # Example of using these functions in the FourierSeries class
 if __name__ == "__main__":
     L = np.pi  # Half-period for all functions
-    terms = 900  # Number of terms in Fourier series
+    terms = 10  # Number of terms in Fourier series
 
     # Test each type of target function
     for function_type in ["square", "sawtooth", "triangle", "sine", "cosine"]:
