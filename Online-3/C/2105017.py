@@ -30,8 +30,16 @@ def function(x_values, funcType="Parabolic"):
     if funcType == "Rectangular":
         return np.where((x_values >= interval[0]) & (x_values <= interval[1]), 1, 0)
 
+    if funcType == "online":
+        return np.where(
+            (x_values >= interval[0]) & (x_values <= interval[1]),
+            2 * np.sin(14 * np.pi * x_values)
+            - np.sin(2 * np.pi * x_values)
+            * (4 * np.sin(2 * np.pi * x_values) * np.sin(14 * np.pi * x_values) - 1),
+            0,
+        )
 
-x_values = np.linspace(-10, 10, 1000)
+x_values = np.linspace(0, 1, 1000)
 
 
 # Fourier Transform
@@ -70,9 +78,8 @@ def inverse_fourier_transform(ft_signal, frequencies, sampled_times):
     return reconstructed_signal
 
 
-frequency_ranges = [(-1, 1), (-2, 2), (-5, 5)]
-# function_types = ["Parabolic", "Triangular", "Sawtooth", "Rectangular"]
-function_types = ["Sawtooth"]
+frequency_ranges = [(-10, 10)]
+function_types = ["online"]
 
 for funcType in function_types:
     y_values = function(x_values, funcType)
